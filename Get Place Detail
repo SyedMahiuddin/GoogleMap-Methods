@@ -1,0 +1,31 @@
+
+package google_place:
+
+initialize GooglePlace googlePlace =
+      GooglePlace("API Key");
+
+
+Future<Map<String, dynamic>> getPlaceDetails(String placeId) async {
+    print("detail called");
+    var placeDetails = await googlePlace.details.get(placeId);
+    if (placeDetails?.status == "OK") {
+      // Access place details such as lat, lng, name, address, etc.
+      var latitude = placeDetails?.result?.geometry?.location?.lat;
+      var longitude = placeDetails?.result?.geometry?.location?.lng;
+      var name = placeDetails?.result?.name;
+      var address = placeDetails?.result?.formattedAddress;
+
+      gymPlaceDetails.value = {
+        'placeId': placeId.toString(),
+        'name': name!,
+        'latitude': latitude!.toString(),
+        'longitude': longitude!.toString(),
+        'address': address!,
+      };
+      // Use the details as needed
+      print("Place Name: $name");
+      print("Latitude: $latitude, Longitude: $longitude");
+      print("Address: $address");
+    }
+    return gymPlaceDetails.map((key, value) => MapEntry(key.toString(), value));
+  }
