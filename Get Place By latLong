@@ -1,0 +1,30 @@
+Future<String> getPlaceName(double latitude, double longitude) async {
+  final apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your API key
+  final apiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey';
+
+  try {
+    // Make an HTTP GET request
+    final response = await http.get(Uri.parse(apiUrl));
+    
+    // Check if the request was successful (status code 200)
+    if (response.statusCode == 200) {
+      // Parse the JSON response
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      // Check if the status in the response is OK
+      if (data['status'] == 'OK') {
+        // Extract the formatted address (place name) from the results
+        final results = data['results'] as List<dynamic>;
+        if (results.isNotEmpty) {
+          return results[0]['formatted_address'];
+        }
+      }
+    }
+  } catch (e) {
+    // Handle any errors that occur during the HTTP request
+    print('Error fetching place name: $e');
+  }
+
+  // Return null if unable to fetch the place name
+  return null;
+}
