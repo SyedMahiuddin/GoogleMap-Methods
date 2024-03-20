@@ -1,0 +1,29 @@
+
+using package google_place:
+
+initialize  GooglePlace googlePlace =
+      GooglePlace("AIzaSyCQocrd-iGBtHgvVTIQwkju-4NgTl7ze88");
+
+List suggestions=[];
+
+void onSearchTextChanged(String query) async {
+    if (query.isNotEmpty) {
+      suggestions.clear();
+      var response = await signupController.googlePlace.autocomplete.get(query);
+      AutocompletePrediction autocompletePrediction = response!.predictions![0];
+      print("placesssfsdf677sdf : " +
+          autocompletePrediction.description.toString());
+      var placeDetails = await signupController.googlePlace.details
+          .get(autocompletePrediction.placeId.toString());
+      print("latlong: " +
+          placeDetails!.result!.geometry!.location!.lat.toString());
+      for (int i = 0; i < response!.predictions!.length; i++) {
+        setState(() {
+          suggestions.add({
+            'placeId': response!.predictions![i].placeId.toString(),
+            'description': response!.predictions![i].description.toString(),
+          });
+        });
+      }
+    }
+  }
