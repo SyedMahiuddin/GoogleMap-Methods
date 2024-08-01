@@ -1,0 +1,26 @@
+final List<LatLng> _locations = [
+     LatLng(37.42796133580664, -122.085749655962),
+     LatLng(37.42896133580664, -122.085749655962),
+     LatLng(37.42996133580664, -122.085749655962),
+     // Add more LatLng coordinates as needed
+   ];
+   Set<Marker> _markers = {};
+
+   Future<void> _loadMarkers() async {
+     final BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+       ImageConfiguration(size: Size(48, 48)),
+       'assets/images/car.png',
+     );
+
+     Set<Marker> markers = _locations.map((location) {
+       return Marker(
+         markerId: MarkerId(location.toString()),
+         position: location,
+         icon: markerIcon,
+       );
+     }).toSet();
+
+     setState(() {
+       _markers = markers;
+     });
+   }
